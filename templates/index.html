@@ -1,0 +1,32 @@
+<html>
+<head>
+<title>driusan's mail</title>
+</head>
+<body>
+<h1>{{.StartID}} to {{.EndID}} of {{.NumMessages}} Messages</h1>
+<a href="/new">New email</a>
+{{if (gt .NextPage 0)}}<a href="/?page={{.NextPage}}">Next</a>{{end}}
+{{if (gt .PrevPage 0)}}<a href="/{{if (ne .PrevPage 1)}}?page={{.PrevPage}}{{end}}">Prev</a>{{end}}
+
+<a href="/logout">Logout</a>
+
+<table>
+<tr>
+	<th>Date</th>
+	<th>From</th>
+	<th>Subject</th>
+	<th>Unread?</th>
+</tr>
+{{range $row := .Messages}}
+<tr>
+	<td>{{$row.Date}}</td>
+	<td>{{$row.From}}</td>
+	<td><a href="/messages/{{$row}}">{{$row.Subject}}</a></td>
+	<td>{{if $row.IsUnread}}Yes{{end}}</td>
+</tr>
+{{end}}
+</tr>
+</table>
+</body>
+</html>
+

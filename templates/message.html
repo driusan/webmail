@@ -1,0 +1,43 @@
+<html>
+<head>
+<title>driusan's mail</title>
+</head>
+<body>
+<a href="/">Index</a>
+{{if (ne .Message.Prev "")}}<a href="/messages/{{.Message.Prev}}">Prev</a>{{end}}
+{{if (ne .Message.Next "")}}<a href="/messages/{{.Message.Next}}">Next</a>{{end}}
+
+<form action="/messages/{{.Message}}" method="post">
+<input type="hidden" name="unread" value="true">
+<input type="submit" value="Mark unread">
+</form>
+<a href="/new?replyto={{.Message}}">Reply</a>
+
+<h1>{{.Message.Subject}}</h1>
+<dl>
+	<dt>From</dt><dd>{{.Message.From}}</dd>
+	<dt>To</dt><dd>{{.Message.To}}</dd>
+	{{if (ne .Message.CC "")}}<dt>CC</dt><dd>{{.Message.CC}}</dd>{{end}}
+	<dt>Date</dt><dd>{{.Message.Date}}</dd>
+</dl>
+<a href="/messages/{{.Message}}">Text</a>
+{{if .Message.HTML}}<a href="/messages/{{.Message}}/html">HTML (Unsafe)</a>{{end}}
+<a href="/messages/{{.Message}}/raw">Raw</a>
+
+{{if (eq .Type "html")}}
+	<div>
+		{{.HTMLContent}}
+	</div>
+{{else}}
+	<pre>
+		{{.Content}}
+	</pre>
+{{end}}
+
+{{range $attach := .Message.Attachments}}
+<div>
+<a href="/messages/{{$attach.MessageID}}/attachments/{{$attach.AttachID}}">Attachment {{$attach.Filename}} ({{$attach.Type}})</a>
+</div>
+{{end}}
+</body>
+</html>
