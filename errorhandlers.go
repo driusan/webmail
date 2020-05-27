@@ -12,7 +12,7 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 
 func BadRequest(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(400)
-	fmt.Fprintf(w, "Not found")
+	fmt.Fprintf(w, "Bad request")
 }
 
 func PermissionDenied(w http.ResponseWriter, r *http.Request) {

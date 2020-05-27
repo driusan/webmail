@@ -17,7 +17,7 @@
 	<dd><input type="text" name="to" placeholder="bob@example.com" {{if .To}}value="{{.To}}"{{end}}></dd>
 
 	<dt>CC:</dt>
-	<dd><input type="text" name="cc" placeholder="alice@example.com"></dd>
+	<dd><input type="text" name="cc" placeholder="alice@example.com" {{if .CC}}value="{{.CC}}"{{end}}></dd>
 
 	<dt>BCC:</dt>
 	<dd><input type="text" name="bcc" placeholder="nsa@example.com"></dd>

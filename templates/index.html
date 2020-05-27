@@ -3,13 +3,17 @@
 <title>driusan's mail</title>
 </head>
 <body>
+{{if (ne .Banner "")}}<h1>{{.Banner}}</h1>{{end}}
 <h1>{{.StartID}} to {{.EndID}} of {{.NumMessages}} Messages</h1>
+<div>
 <a href="/new">New email</a>
-{{if (gt .NextPage 0)}}<a href="/?page={{.NextPage}}">Next</a>{{end}}
-{{if (gt .PrevPage 0)}}<a href="/{{if (ne .PrevPage 1)}}?page={{.PrevPage}}{{end}}">Prev</a>{{end}}
-
+<div>
+{{if (gt .PrevPage 0)}}<a href="/{{if (ne .PrevPage 1)}}?page={{.PrevPage}}{{end}}">Previous Page</a>{{end}}
+{{if (gt .NextPage 0)}}<a href="/?page={{.NextPage}}">Next Page</a>{{end}}
+</div>
+<div>
 <a href="/logout">Logout</a>
-
+</div>
 <table>
 <tr>
 	<th>Date</th>

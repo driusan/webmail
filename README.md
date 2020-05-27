@@ -10,6 +10,4 @@ that the user has access to the mailbox mounted at /mail/fs/mbox,
 and then displays the messages paginated with unread messages
 first and otherwise by date. Clicking on a subject displays the
 message, with text/plain preferred for multipart/alternative messages.
-
-NB. Sending from the web client is not yet implemented.
  

@@ -20,6 +20,8 @@ type indexdata struct {
 
 	StartID, EndID     int
 	NextPage, PrevPage int
+
+	Banner string
 }
 
 const messagesPerPage = 50
@@ -33,6 +35,33 @@ func isAuthenticated(r *http.Request) bool {
 	return ok
 }
 
+func getSessionInfo(r *http.Request) sessionInfo {
+	authtoken, err := r.Cookie("token")
+	if err != nil {
+		return sessionInfo{}
+	}
+	i, ok := logins[loginCookie(authtoken.Value)]
+	if ok {
+		return i
+	}
+	return sessionInfo{}
+}
+
+func setBanner(r *http.Request, v string) {
+	authtoken, err := r.Cookie("token")
+	if err != nil {
+		return
+	}
+
+	av := loginCookie(authtoken.Value)
+	i, ok := logins[av]
+	if !ok {
+		return
+	}
+	i.banner = v
+	logins[av] = i
+
+}
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/" {
@@ -84,7 +113,20 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		endMessage = len(cachedmail)
 	}
 
-	if err := templates.ExecuteTemplate(w, "index.html", indexdata{NumMessages: len(cachedmail), Messages: messages, NextPage: nextPage, PrevPage: prevPage, StartID: startMessage + 1, EndID: endMessage}); err != nil {
+	templateData := indexdata{
+		NumMessages: len(cachedmail),
+		Messages:    messages,
+		NextPage:    nextPage,
+		PrevPage:    prevPage,
+		StartID:     startMessage + 1,
+		EndID:       endMessage,
+	}
+	si := getSessionInfo(r)
+	if si.banner != "" {
+		templateData.Banner = si.banner
+		setBanner(r, "")
+	}
+	if err := templates.ExecuteTemplate(w, "index.html", templateData); err != nil {
 		log.Fatalln(err)
 	}
 }

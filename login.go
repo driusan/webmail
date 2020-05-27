@@ -14,7 +14,12 @@ import (
 type loginCookie string
 type user string
 
-var logins map[loginCookie]user = make(map[loginCookie]user)
+type sessionInfo struct {
+	user   user
+	banner string
+}
+
+var logins map[loginCookie]sessionInfo = make(map[loginCookie]sessionInfo)
 
 type templateArgs struct {
 	Username string
@@ -61,9 +66,9 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 		cookie := loginCookie(fmt.Sprintf("%x", buf[:]))
 
-		logins[cookie] = user(uname)
+		logins[cookie] = sessionInfo{user: user(uname)}
 		w.Header().Set("Location", "/")
-		w.Header().Set("Set-Cookie", "token="+string(cookie))
+		w.Header().Set("Set-Cookie", fmt.Sprintf("token=%s; HttpOnly; Secure", cookie))
 		w.WriteHeader(303)
 		fmt.Fprintf(w, "Your browser should have redirected you to /")
 	default:
@@ -74,7 +79,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Set-Cookie", "")
+	w.Header().Set("Set-Cookie", "token=;")
 	w.Header().Set("Location", "/")
 	cookie, err := r.Cookie("token")
 	if err == nil {
