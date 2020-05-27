@@ -172,7 +172,6 @@ func loadcacheifmodified() {
 	// meaning of mtime on a directory is undefined.
 	if mt.Unix() > lastmTime.Unix() {
 		loadcache()
-		lastmTime = mt
 	} else {
 	}
 }
@@ -198,4 +197,10 @@ func loadcache() {
 	cachedmail = newcachedmail
 	mu.Unlock()
 	sortcache()
+
+	mtime, err := os.Stat("/mail/fs/mbox")
+	if err != nil {
+		return
+	}
+	lastmTime = mtime.ModTime()
 }

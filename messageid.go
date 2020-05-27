@@ -3,7 +3,11 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
+	"strings"
 	"time"
+
+	"github.com/driusan/dkim"
 )
 
 type MessageID string
@@ -84,6 +88,33 @@ func (m MessageID) Body() string {
 }
 func (m MessageID) HTML() string {
 	return m.bodyType("text/html")
+}
+
+var dkimcache map[MessageID]string
+
+func (m MessageID) DKIMStatus() string {
+	if dkimcache == nil {
+		dkimcache = make(map[MessageID]string)
+	}
+	if s, ok := dkimcache[m]; ok {
+		return s
+	}
+	raw := m.readfile("raw")
+	r, err := dkim.FileBuffer(dkim.NormalizeReader(strings.NewReader(raw)))
+	if err != nil {
+		return "Error checking status"
+	}
+	defer os.Remove(r.Name())
+	if err := dkim.Verify(r); err != nil {
+		if s := err.Error(); s == "Permanent failure: no DKIM signature" {
+			dkimcache[m] = ""
+			return ""
+		}
+		dkimcache[m] = err.Error()
+		return err.Error()
+	}
+	dkimcache[m] = "Verified"
+	return "Verified"
 }
 
 type Attachment struct {

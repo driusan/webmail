@@ -19,11 +19,15 @@
 	<dt>To</dt><dd>{{.Message.To}}</dd>
 	{{if (ne .Message.CC "")}}<dt>CC</dt><dd>{{.Message.CC}}</dd>{{end}}
 	<dt>Date</dt><dd>{{.Message.Date}}</dd>
+	{{with .Message.DKIMStatus}}
+		<dt>DKIM Status</dt><dd>{{.}}</dd>
+	{{end}}
 </dl>
 <a href="/messages/{{.Message}}">Text</a>
 {{if .Message.HTML}}<a href="/messages/{{.Message}}/html">HTML (Unsafe)</a>{{end}}
 <a href="/messages/{{.Message}}/raw">Raw</a>
 
+<hr>
 {{if (eq .Type "html")}}
 	<div>
 		{{.HTMLContent}}
