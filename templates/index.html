@@ -19,14 +19,16 @@
 	<th>Date</th>
 	<th>From</th>
 	<th>Subject</th>
-	<th>Unread?</th>
 </tr>
 {{range $row := .Messages}}
 <tr>
 	<td>{{$row.Date}}</td>
 	<td>{{$row.From}}</td>
+	{{if $row.IsUnread}}
+	<th><a href="/messages/{{$row}}">{{$row.Subject}}</a></th>
+	{{else}}
 	<td><a href="/messages/{{$row}}">{{$row.Subject}}</a></td>
-	<td>{{if $row.IsUnread}}Yes{{end}}</td>
+	{{end}}
 </tr>
 {{end}}
 </tr>
