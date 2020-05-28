@@ -33,9 +33,7 @@
 		{{.HTMLContent}}
 	</div>
 {{else}}
-	<pre>
-		{{.Content}}
-	</pre>
+	<pre>{{.Content}}</pre>
 {{end}}
 
 {{range $attach := .Message.Attachments}}
